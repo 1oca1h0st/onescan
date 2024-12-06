@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
-from app.api.v1 import users
+from app.api.v1 import users, system_info
 from app.database.database import connect_db, close_db
 
 from fastapi.responses import HTMLResponse
@@ -11,7 +11,8 @@ from middleware.auth import JWTMiddleware
 
 app = FastAPI()
 
-app.include_router(users.router, prefix="/api/v1")
+app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
+app.include_router(system_info.router, prefix="/api/v1/system_info", tags=["System Info"])
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory="templates")
