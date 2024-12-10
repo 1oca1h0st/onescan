@@ -1,18 +1,18 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from app.api.v1 import users, system_info
 from app.database.database import connect_db, close_db
-
-from fastapi.responses import HTMLResponse
-from fastapi.templating import Jinja2Templates
-
+from celery_tasks.config import create_task
 from middleware.auth import JWTMiddleware
+from router import router
 
 app = FastAPI()
 
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(system_info.router, prefix="/api/v1/system_info", tags=["System Info"])
+app.include_router(router.p_router, tags=["Pages"])
 
 app.mount('/static', StaticFiles(directory='static'), name='static')
 templates = Jinja2Templates(directory="templates")
@@ -31,26 +31,6 @@ async def shutdown_db_client():
 app.add_middleware(JWTMiddleware)
 
 
-@app.get("/")
-def read_root():
-    return {"message": "Welcome to the FastAPI application!"}
-
-
-@app.get("/login", name="login")
-async def login(request: Request):
-    return templates.TemplateResponse("sign-in.jinja2", {"request": request})
-
-
-@app.get("/forgot_password", name="forgot_password")
-async def forgot_password(request: Request):
-    return templates.TemplateResponse("forgot-password.jinja2", {"request": request})
-
-
-@app.get("/sign_up", name="sign_up")
-async def sign_up(request: Request):
-    return templates.TemplateResponse("sign-up.jinja2", {"request": request})
-
-
-@app.get("/dashboard", name="dashboard")
-async def dashboard(request: Request):
-    return templates.TemplateResponse("dashboard.jinja2", {"request": request})
+@app.get("/1111")
+async def aaa():
+    return create_task(123)
