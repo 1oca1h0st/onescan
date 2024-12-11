@@ -1,7 +1,9 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
-DATABASE_URL = "mongodb://127.0.0.1:27017"
-DATABASE_NAME = "fastapi_db"
+from app.core.config import settings
+
+DATABASE_URL = settings.DATABASE_URL
+DATABASE_NAME = settings.DATABASE_NAME
 
 client = None
 db = None
