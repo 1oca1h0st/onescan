@@ -3,10 +3,9 @@ from fastapi.security import OAuth2PasswordRequestForm
 from passlib.context import CryptContext
 from pydantic.v1 import EmailStr
 
-from app.schemas.user import UserCreate, UserLogin, UserResponse
 from app.crud.user import create_user, authenticate_user
-
-from app.schemas.token import Token
+from app.models.token import Token
+from app.schemas.users import UserCreate, UserLogin, UserResponse
 
 router = APIRouter()
 
@@ -21,7 +20,7 @@ async def register_user(user: UserCreate):
     return db_user
 
 
-@router.post("/login", name="users.login")
+@router.post("/login", response_model=Token, name="users.login")
 async def login_user(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
     user = UserLogin(email=EmailStr(form_data.username), password=form_data.password)
     access_token = await authenticate_user(user.email, user.password)

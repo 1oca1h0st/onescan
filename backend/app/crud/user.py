@@ -1,11 +1,11 @@
-from app.database.database import get_database
-from app.schemas.user import UserCreate, UserLogin, UserResponse
+from datetime import timedelta
+
 import bcrypt
 from pydantic import EmailStr
 
-from datetime import datetime, timedelta
-
 from app.core.config import settings
+from app.database.database import get_database
+from app.schemas.users import UserCreate
 from app.utils.jwt_helper import create_access_token
 
 

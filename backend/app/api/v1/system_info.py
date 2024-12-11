@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 
-from app.middleware.auth import oauth2_scheme
+from app.utils.jwt_helper import oauth2_scheme
 from app.utils.system_info import get_os_type, get_uptime, get_cpu_usage, get_memory_usage
 
 router = APIRouter(dependencies=[Depends(oauth2_scheme)])
